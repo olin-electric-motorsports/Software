@@ -11,5 +11,7 @@ render HTML templates or something fancy like that. For now though, this works.
 
 To run the flask app in a browser, clone the repo, install flask, and then 
 run these two commands in the terminal.
-`export FLASK_APP=visualization.py
-python -m flask run '
+```
+export FLASK_APP=visualization.py
+python -m flask run
+```
