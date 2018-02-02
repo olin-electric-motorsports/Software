@@ -1,0 +1,18 @@
+<!doctype html>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table.css') }}">
+
+<table class="centered thick-border">
+	<tr>
+		<th>Time</th>
+		<th>Address</th>
+    <th>Data</th>
+	</tr>
+	{% for t, d in data_set.items() %}
+		<tr>
+			<td>{{ t }}</td>
+			<td>{{ d[0] }}</td>
+      <td>{{ d[1] }}</td>
+		</tr>
+	{% endfor %}
+</table>

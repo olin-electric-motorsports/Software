@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 from collections import defaultdict
-from flask import Flask
+from flask import Flask, render_template
 import numpy
 import matplotlib
 import os
+import csv
+import pandas
 
 app = Flask(__name__)
 
@@ -15,25 +17,19 @@ def run_on_startup():
     data_set = create_data_set()
     time_range = numpy.linspace(1, 1000, 1000)
     message_range = ['B', 'C', 'D', 'E', 'F', '10', '11', '12', '13', '14']
-    return print_data_set(data_set, time_range)
+    return render_template("table.html", data_set=data_set)
 
-
+"""
 def print_data_set(data_set= {}, time_span = []):
-    """
+
     Literally just blindly prints the data set dictionary. Useful for
     debugging, and possibly only for debugging.
     time_span = List with start and end time as integers.
     message_span = List of strings with CAN bit message type names.
-    """
-    printout = ""
-    # TODO There's probably some defaultdict magic that can make this really
-    # quick and not wasteful like this. At the same time, this whole function
-    # is somewhat trivial, so there's that...
-    for time in time_span:
-        if data_set[time]:
-            printout += str(time) + " " + str(data_set[time]) + '\n'
-    return printout
 
+
+    return " ".join(["%s %s" % (str(time), str(data_set[time])) for time in time_span if data_set[time]])
+"""
 
 def create_data_set(text_file = 'static/9_10_test_data.txt'):
     """
@@ -43,18 +39,16 @@ def create_data_set(text_file = 'static/9_10_test_data.txt'):
     It should look like {time: [[MESSAGE_TYPE, bit 1, bit 2],
     [MESSAGE_TYPE, bit 1, bit 2]]}
     """
-    # TODO this is a lazy choice. I could use a real dictionary. I should
-    # choose whether I need to actually use one.
-    data_set = defaultdict(list)
+    data_set = dict()
 
     # with app.open_resource(text_file) as raw_data:
     raw_data = open(text_file, 'r')
     # Get rid of uncessary characters and toss it into a dictionary.
     for line in raw_data:
-        field = line.split(":")
-        field[1]=field[1].strip(",time")
-        field[2] = int(field[2].strip("\n"))
-        data_set[field[2]].append([field[0]] + field[1].split(","))
+        line = line.strip()
+        data_lst = line.split(':')
+        data_lst[1] = data_lst[1].replace(',time','')
+        data_set[data_lst[2]] = data_lst[0:2]
     return data_set
 
 
