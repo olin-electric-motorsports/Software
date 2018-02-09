@@ -31,10 +31,18 @@ keys = {"1" : { "name" : "PANIC", 0 : "PANIC"}, \
                1 : "Shutdown Charging"}, \
         "12" : {"name" : "Master Switch Panel", 0 : "Shutdown 0x02", \
                1 : "Shutdown 0x03", 2 : "Shutdown 0x04", \
-               3 : "Shutdown 0x10", 4 : "Shutdown 0x11"} \
-        }  
-
-
+               3 : "Shutdown 0x10", 4 : "Shutdown 0x11"}, \
+        "13" : {"name" : "BMS Voltage Detail", 0 : "BMS Voltage Cell Index", \
+               1 : "First Cell Index", 2 : "Cell 1 Voltage High", \
+               3 : "Cell 1 Voltage Low", 4 : "Cell 2 Voltage High", \
+               5 : "Cell 2 Voltage Low", 6 : "Cell 3 Voltage High", \
+               7 : "Cell 3 Voltage Low"}, \
+        "14" : {"name" : "BMS Temperature Detail", 0 : "BMS Temp Cell Index", \
+               1 : "First Cell Index", 2 : "Cell 1 Temp High", \
+               3 : "Cell 1 Temp Low", 4 : "Cell 2 Temp High", \
+               5 : "Cell 2 Temp Low", 6 : "Cell 3 Temp High", \
+               7 : "Cell 3 Temp Low"} }
+        }
 # TODO : This is less than ideal in general, but it's especially so from
 #        a data structures point of view. It's probably worth cleaning up a 
 #        lot of this processing somehow to make that not the case.
@@ -48,25 +56,24 @@ def txt_to_csv(text_file, msg_keys = keys, csv_name = 'data.csv'):
 
     text_file : Text file of logged car data
     json_keys : JSON file with message headers and types. 
-    """
-                                                                             
-    data_set = defaultdict(list)                                                                               
-    raw_data = open(text_file, 'r')                                             
+    """                                                                        
+    data_set = defaultdict(list
+    raw_data = open(text_file, 'r')
     
     # Put the data set into a usable dictionary
-    for line in raw_data:                                                       
-        field = line.split(":") 
-        field[0] = field[0].strip(' ')                                                
+    for line in raw_data:
+        field = line.split(":")
+        field[0] = field[0].strip(' ')
         field[1]=field[1].strip(",time")
-        field[2] = int(field[2].strip("\n")) 
-        data_set[field[2]].append([field[0]] + field[1].split(","))             
+        field[2] = int(field[2].strip("\n"))
+        data_set[field[2]].append([field[0]] + field[1].split(","))
     raw_data.close()
 
     # Create a csv
     with open(csv_name, 'wb') as csv_file:
         writer = csv.writer(csv_file, delimiter = ',', quotechar='"', \
                             quoting=csv.QUOTE_NONE, escapechar=' ')
-        
+
         # Write header for the columns
         header = ['time']
         val_list = sorted(list(keys.values()))
