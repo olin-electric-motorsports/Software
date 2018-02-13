@@ -9,8 +9,11 @@ It might be nice in the future to have some central "web" program; it could
 render HTML templates or something fancy like that. For now though, this works.
 
 
-To run the flask app in a browser, clone the repo, install flask, and then
-run
+To run the flask app in a browser, clone the repo, install modules, and then
+run:
+```
+sudo pip3 install numpy flask matplotlib pandas
+```
 ```
 $ python3 visualization.py
 ```
